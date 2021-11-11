@@ -1,0 +1,69 @@
+USE_LR_PARSER
+
+prog
+
+(* ======================================================================================================= *)
+<prog> ::= <Statement_List>.
+<Statement_List> ::= <Statement>";" 
+    | <Statement>";" <Statement_List>.
+<Statement> ::= <Init>
+    | <Assign>
+    | <Decl>
+    | <Block>
+    | <For_Loop>
+    | <While_Loop>
+    | <Branch>
+    | <Change>
+    | <Print_Expr>.
+<Init> ::= <Decl> "=" <Expr>.
+<Assign> ::= <Id> ":=" <Expr>.
+<Decl> ::= "int" <Id>
+    | "bool" <Id>.
+<Id> ::= identifier.
+<Block> ::= "{" <Statement_List> "}".
+<For_Loop> ::= "for" "(" <Init>";"<Expr>";"<Change>")"<Block>
+    | "for" "(" <Init>";"<Expr>";"<Assign>")"<Block>.
+<While_Loop> ::= "while" "(" <Expr> ")" <Block>.
+<Branch> ::= "if" <Expr> "then" <Block>
+    | "if" <Expr> "then" <Block> "else" <Block>.
+<Change>::= <Pre_Inc>
+    | <Post_Inc>
+    | <Pre_Dec>
+    | <Post_Dec>.
+<Pre_Inc> ::= "++"<Id>.
+<Post_Inc> ::= <Id>"++".
+<Pre_Dec> ::= "--"<Id>.
+<Post_Dec> ::= <Id>"--".
+<Expr> ::= <Expr> "or" <LogicalAnd>
+    | <LogicalAnd>.
+<LogicalAnd> ::= <LogicalAnd> "and" <Equality>
+    | <Equality>.
+<Equality> ::= <Relational> "=" <Relational>
+    | <Relational> "!=" <Relational>
+    | <Relational>.
+<Relational> ::= <Additive> "<" <Additive> 
+    | <Additive> ">" <Additive>
+    | <Additive> "<=" <Additive>
+    | <Additive> ">=" <Additive>
+    | <Additive>.
+<Additive> ::= <Additive> "+" <Multiplicative>
+    | <Additive> "-" <Multiplicative>
+    | <Multiplicative>.
+<Multiplicative> ::= <Multiplicative> "*" <Negation>
+    | <Multiplicative> "div" <Negation>
+    | <Multiplicative> "mod" <Negation>
+    | <Negation>.
+<Negation> ::= "not" <Negation>
+    | "-"<Negation>
+    | <Exponentiation>.
+<Exponentiation> ::= <Final> "^" <Exponentiation>
+    | <Final>.
+<Final> ::= "("<Expr>")"
+    | "|"<Expr>"|"
+    | <Change>
+    | <Id>
+    | integer
+    | "true"
+    | "false".
+
+<Print_Expr> ::= "print" <Expr>.
