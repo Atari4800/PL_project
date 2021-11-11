@@ -15,7 +15,7 @@ prog
     | <Branch>
     | <Change>
     | <Print_Expr>.
-<Init> ::= <Decl> "=" <Expr>.
+<Init> ::= <Decl> ":=" <Expr>.
 <Assign> ::= <Id> ":=" <Expr>.
 <Decl> ::= "int" <Id>
     | "bool" <Id>.
