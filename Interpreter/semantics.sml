@@ -774,8 +774,8 @@ fun E(itree(inode("expr",_),
                 let
                   val (v1,m1) = E(final,m)
                   val (v2,m2) = E(exponentiation,m1)
-                  fun expo (a,0) = a
-                    | expo (a,b) = a * expo(b - 1)
+                  fun expo (a,0) = 1
+                    | expo (a,b) = a * expo(a,b - 1)
                 in
                   (expo(v1,v2),m2)
   | E(itree(inode("exponentiation",_),[final]),m) = E(final,m)
