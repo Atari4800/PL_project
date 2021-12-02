@@ -265,10 +265,10 @@ fun M(  itree(inode("prog",_),
                     itree(inode("}",_),[])
                   ]
                 ),
-                (env0,addr,s0)
+                (env0,addr0,s0)
               ) = 
               let
-                val (env1,s1) = M(statement_list, (env0,addr,s0));
+                val (env1,addr,s1) = M(statement_list, (env0,addr0,s0));
                 val m2 = (env0,addr,s1)
               in
                 m2
