@@ -753,7 +753,7 @@ fun E(itree(inode("expr",_),
                 let
                   val v = E(negation,m)
                 in
-                  0 - v
+                  ~ v
                 end
   | E(itree(inode("negation",_),
                     [
@@ -801,7 +801,7 @@ fun E(itree(inode("expr",_),
                   val (v1,m1) = E(expr,m)
                 in
                   if v1 < 0 then
-                    (-v1,m1)
+                    (~ v1,m1)
                   else
                     (v1,m1)
                 end
