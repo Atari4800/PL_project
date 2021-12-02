@@ -42,7 +42,9 @@ type store = (loc * denotable_value) list
    next available memory location, or (2) the last used memory location -- it all depends on when the counter is 
    incremented. *)
 val initialModel = ( []:env, 0:loc, []:store )
-    
+
+fun new (env,addr,s) = addr+1;
+
 fun accessEnv( id1, (env,addr,s) ) =
     let
         val msg = "Error: accessEnv " ^ id1 ^ " not found.";
@@ -122,7 +124,7 @@ fun showStore [] = print "\n"
                                 showStore store
                                 );
 
-fun showModel (env,addr,s) = (
+fun printModel (env,addr,s) = (
                               print("\n Enviroment: \n");
                               showEnv env;
                               print("\n Store: \n");
