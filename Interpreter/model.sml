@@ -42,7 +42,7 @@ type store = (loc * denotable_value) list
    next available memory location, or (2) the last used memory location -- it all depends on when the counter is 
    incremented. *)
 val initialModel = ( []:env, 0:loc, []:store )
-
+    
 fun new (env,addr,s) = addr+1;
 
 fun accessEnv( id1, (env,addr,s) ) =
@@ -57,7 +57,7 @@ fun accessEnv( id1, (env,addr,s) ) =
         aux env
     end;
     
-fun accessStore( loc1: int, (env,addr,s) ) =
+fun accessStore( loc1:int, (env,addr,s) ) =
     let
       val msg = "Error: accessStore " ^ Int.toString loc1 ^ " not found.";
 
@@ -70,34 +70,38 @@ fun accessStore( loc1: int, (env,addr,s) ) =
     end;
     
     
-fun update_aux1( (tuple1 as (x1,y1: types,z1))::env, tuple2 as (x2,y2: types,z2)) =
-  if x1 = x2 then tuple2::env
-  else            tuple1::update_aux1(env, tuple2)
-  | update_aux1([], tuple) = [tuple];
 
-fun updateEnv(id1,t1: types,loc1, (env,addr,s)) =
+
+fun updateEnv(id1, t1:types, loc1, (env,addr,s)) =
 let
+  fun update_aux1( (tuple1 as (x1, y1:types, z1:int))::env, tuple2 as (x2, y2:types, z2)) =
+    if x1 = x2 then tuple2::env
+    else            tuple1::update_aux1(env, tuple2)
+    | update_aux1([], tuple) = [tuple];
+  
   val new_env = update_aux1(env,(id1,t1,loc1))
 in
   (new_env, addr, s)
 end;
 
 
-fun update_aux( (tuple1 as (x1,y1))::flr, tuple2 as (x2,y2)) =
-    if x1 = x2 then tuple2::flr
-    else            tuple1::update_aux(flr,tuple2)
-  | update_aux( [], tuple) = [tuple];
+
 
 fun updateStore(loc1, dv1, (env,addr,s)) =
 let
+  fun update_aux( (tuple1 as (x1,y1))::flr, tuple2 as (x2,y2)) =
+    if x1 = x2 then tuple2::flr
+    else            tuple1::update_aux(flr,tuple2)
+  | update_aux( [], tuple) = [tuple];
+  
   val new_store = update_aux(s,(loc1,dv1))
 in
   (env,addr,new_store)
 end;
 
 
-fun getLoc(t:types,l: int) = l;
-fun getType(t:types,l:int) = t;
+fun getLoc(t:types,loc) = loc;
+fun getType(t:types,loc) = t;
 
 fun typeToString BOOL  = "bool"
   | typeToString INT   = "integer"
