@@ -476,7 +476,7 @@ fun typeOf( itree ( inode ("Expr",_),
         
         
 (*Program or prog*)
-fun typeCheck( itree ( inode("prog",_),
+fun typeCheck( itree ( inode("Program",_),
     [
         Statement_List0
     ]),
@@ -567,9 +567,9 @@ fun typeCheck( itree ( inode("prog",_),
  (*Init*)   
 | typeCheck ( itree ( inode ( "Init",_),
     [
-        itree ( inode ( "INTEGER",_), []),
+        itree ( inode ( "integer",_), []),
         Id0,
-        itree ( inode ( "=",_), []),
+        itree ( inode ( ":=",_), []),
         Expr0
     ]),
     m0
@@ -585,15 +585,15 @@ fun typeCheck( itree ( inode("prog",_),
     
 | typeCheck ( itree ( inode ( "Init",_),
     [
-        itree ( inode ( "BOOLEAN",_), []),
+        itree ( inode ( "bool",_), []),
         Id0,
-        itree ( inode ( "=",_), []),
+        itree ( inode ( ":=",_), []),
         Expr0
     ]),
     m0
     )=
     let 
-        val m1 = updateEnv ( getLeaf( Id0), INT, 0, m0)
+        val m1 = updateEnv ( getLeaf( Id0), BOOL, 0, m0)
         val t0 = typeOf (Expr0, m0)
     in
         if t0 = BOOL
@@ -606,7 +606,7 @@ fun typeCheck( itree ( inode("prog",_),
 | typeCheck ( itree ( inode ( "Assign",_),
     [
         Id0,
-        itree ( inode ( "=",_), []),
+        itree ( inode ( ":=",_), []),
         Expr0
     ]),
     m0
@@ -617,7 +617,7 @@ fun typeCheck( itree ( inode("prog",_),
     in
         if t0 = t1
         then m0
-        else error "Error: Incorrect Assignment"
+        else raise model_error
     end    
     
 (*Decl*)    
