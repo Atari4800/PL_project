@@ -623,7 +623,7 @@ fun typeCheck( itree ( inode("Program",_),
 (*Decl*)    
 | typeCheck ( itree ( inode ("Decl",_),
     [
-        itree ( inode ("INTEGER",_), []),
+        itree ( inode ("integer",_), []),
         Id0
     ]),
     m0 
@@ -631,7 +631,7 @@ fun typeCheck( itree ( inode("Program",_),
         
 | typeCheck ( itree ( inode ("Decl",_),
     [
-        itree ( inode ("BOOLEAN",_), []),
+        itree ( inode ("boolean",_), []),
         Id0
     ]),
     m0 
