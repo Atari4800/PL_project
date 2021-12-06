@@ -12,22 +12,481 @@ open CONCRETE_REPRESENTATION;
     the semantics.sml file for a more detailed discussion on this topic. 
 *)
 
+(*exception catch for errors*)
 exception model_error;
 
+(*if an error occurs this message can appear*)
 fun error message = (print message, raise model_error);
 
+
+(*Expr*)
+fun typeOf( itree ( inode ("Expr",_),
+    [
+        Expr0,
+        itree ( inode ( "or",_),[]),
+        LogicalAnd0
+    ]),
+    m0
+    )=
+    let
+        val t0 = typeOf(Expr0, m0)
+        val t1 = typeOf(LogicalAnd0, m0)
+    in
+        if t0 = BOOL andalso t0 = t1
+        then BOOL
+        else ERROR
+    end    
+    
+| typeOf ( itree ( inode ( "Expr",_),
+    [
+        LogicalAnd0
+    ]),
+    m0
+    )= typeOf(LogicalAnd0, m0)
+    
+    
+(*LogicalAnd*)
+|   typeOf ( itree ( inode ( "LogicalAnd",_),
+    [
+        LogicalAnd0,
+        itree ( inode ( "and",_),[]),
+        Equality0
+    ]),
+    m0
+    )=
+    let
+        val t0 = typeOf(LogicalAnd0, m0)
+        val t1 = typeOf(Equality0, m0)
+    in
+        if t0 = BOOL andalso t0 = t1
+        then BOOL
+        else ERROR
+    end
+    
+| typeOf ( itree ( inode ( "LogicalAnd",_),
+    [
+        Equality0
+    ]),
+    m0
+    )= typeOf(Equality0, m0)
+    
+(*Equality*)
+| typeOf ( itree ( inode ( "Equality",_),
+    [
+        Relational0,
+        itree ( inode ( "=",_),[]),
+        Relational1
+    ]),
+    m0
+    )=
+    let
+        val t0 = typeOf(Relational0, m0)
+        val t1 = typeOf(Relational1, m0)
+    in
+        if t1 <> ERROR andalso t0 = t1
+        then BOOL
+        else ERROR
+    end
+    
+| typeOf ( itree ( inode ( "Equality",_),
+    [
+        Relational0,
+        itree ( inode ( "!=",_), []),
+        Relational1
+        ]),
+        m0
+        )=
+        let
+            val t0 = typeOf(Relational0, m0)
+            val t1 = typeOf(Relational1, m0)
+        in
+            if t1 <> ERROR andalso t0 = t1
+            then BOOL
+            else ERROR
+        end
+        
+        
+| typeOf ( itree ( inode ( "Equality",_),
+    [
+        Relational0
+    ]),
+    m0 )= typeOf(Relational0, m0)
+    
+(*Relational*)
+| typeOf ( itree ( inode ( "Relational",_),
+    [
+        Additive0,
+        itree ( inode ( "<",_),[]),
+        Additive1
+    ]),
+    m0
+    ) =
+    let
+        val t0 = typeOf(Additive0, m0)
+        val t1 = typeOf(Additive1, m0)
+    in
+        if t0 = INT andalso t0 = t1
+        then BOOL
+        else ERROR
+    end
+    
+| typeOf ( itree ( inode ( "Relational",_),
+    [
+        Additive0,
+        itree ( inode ( ">",_),[]),
+        Additive1
+    ]),
+    m0
+    ) =
+    let
+        val t0 = typeOf(Additive0, m0)
+        val t1 = typeOf(Additive1, m0)
+    in
+        if t0 = INT andalso t0 = t1
+        then BOOL
+        else ERROR
+    end   
+    
+| typeOf ( itree ( inode ( "Relational",_),
+    [
+        Additive0,
+        itree ( inode ( "<=",_),[]),
+        Additive1
+    ]),
+    m0
+    ) =
+    let
+        val t0 = typeOf(Additive0, m0)
+        val t1 = typeOf(Additive1, m0)
+    in
+        if t0 = INT andalso t0 = t1
+        then BOOL
+        else ERROR
+    end
+    
+    
+| typeOf ( itree ( inode ( "Relational",_),
+    [
+        Additive0,
+        itree ( inode ( ">=",_),[]),
+        Additive1
+    ]),
+    m0
+    ) =
+    let
+        val t0 = typeOf(Additive0, m0)
+        val t1 = typeOf(Additive1, m0)
+    in
+        if t0 = INT andalso t0 = t1
+        then BOOL
+        else ERROR
+    end    
+
+| typeOf ( itree ( inode ( "Relational",_),
+    [
+        Additive0
+    ]),
+    m0 )= typeOf(Additive0, m0)
+    
+
+(*Additive*)
+| typeOf ( itree ( inode ( "Additive",_),
+    [
+        Additive0,
+        itree ( inode ( "+",_),[]),
+        Multiplicative0
+    ]),
+    m0
+    )=
+    let
+        val t0 = typeOf(Additive0, m0)
+        val t1 = typeOf(Multiplicative0, m0)
+    in
+        if t0 = INT andalso t0 = t1
+        then INT
+        else ERROR
+    end
+    
+| typeOf ( itree ( inode ( "Additive",_),
+    [
+        Additive0,
+        itree ( inode ( "-",_),[]),
+        Multiplicative0
+    ]),
+    m0
+    )=
+    let
+        val t0 = typeOf(Additive0, m0)
+        val t1 = typeOf(Multiplicative0, m0)
+    in
+        if t0 = INT andalso t0 = t1
+        then INT
+        else ERROR
+    end
+        
+| typeOf( itree ( inode ("Additive",_),
+    [
+        Multiplicative0
+    ]),
+    m0 )= typeOf(Multiplicative0, m0)
+    
+    
+    
+(*Multiplicative*)
+| typeOf( itree ( inode ("Multiplicative",_),
+    [
+        Multiplicative0,
+        itree ( inode ( "*",_),[]),
+        Negation0
+    ]),
+    m0
+    )=
+    let
+        val t0 = typeOf(Multiplicative0, m0)
+        val t1 = typeOf(Negation0, m0)
+    in
+        if t0 = INT andalso t0 = t1
+        then INT
+        else ERROR
+    end
+    
+| typeOf( itree ( inode ("Multiplicative",_),
+    [
+        Multiplicative0,
+        itree ( inode ( "div",_),[]),
+        Negation0
+    ]),
+    m0
+    )=
+    let
+        val t0 = typeOf(Multiplicative0, m0)
+        val t1 = typeOf(Negation0, m0)
+    in
+        if t0 = INT andalso t0 = t1
+        then INT
+        else ERROR
+    end
+    
+| typeOf( itree ( inode ("Multiplicative",_),
+    [
+        Multiplicative0,
+        itree ( inode ( "mod",_),[]),
+        Negation0
+    ]),
+    m0
+    )=
+    let
+        val t0 = typeOf(Multiplicative0, m0)
+        val t1 = typeOf(Negation0, m0)
+    in
+        if t0 = INT andalso t0 = t1
+        then INT
+        else ERROR
+    end    
+
+| typeOf ( itree ( inode ("Multiplicative",_),
+    [
+        Negation0
+    ]),
+    m0 )= typeOf(Negation0, m0)
+    
+    
+    
+(*Negation*)
+| typeOf ( itree ( inode ("Negation",_),
+    [
+        itree ( inode ( "not",_),[]),
+        Negation0
+    ]),
+    m0
+    ) =
+    let
+        val t0 = typeOf(Negation0, m0)
+    in
+        if t0 = BOOL
+        then BOOL
+        else ERROR
+    end
+    
+| typeOf ( itree ( inode ("Negation",_),
+    [
+        itree ( inode ("-",_),[]),
+        Negation0
+    ]),
+    m0
+    )=
+    let
+        val t0 = typeOf(Negation0, m0)
+    in
+        if t0 = BOOL
+        then BOOL
+        else ERROR
+    end
+    
+    
+    
+(*Exponentiation*)    
+| typeOf ( itree ( inode ( "Exponentiation",_),
+    [
+        Final0,
+        itree ( inode ( "^",_),[]),
+        Exponentiation0
+    ]),
+    m0
+    )=
+    let
+        val t0 = typeOf(Final0, m0)
+        val t1 = typeOf(Exponentiation0, m0)
+    in
+        if t0 = INT andalso t0 = t1
+        then INT
+        else ERROR
+    end
+    
+| typeOf ( itree ( inode ( "Exponentiation",_),
+    [
+        Final0
+    ]),
+    m0 )= typeOf(Final0, m0)
+        
+    
+(*Final*)
+| typeOf ( itree ( inode ("Final",_),
+    [
+        itree ( inode ( "(",_),[]),
+        Expr0,
+        itree ( inode ( ")",_),[])
+    ]),
+    m0 )= typeOf( Expr0, m0)
+    
+| typeOf ( itree ( inode ( "Final",_),
+    [
+        itree ( inode ( "|",_),[]),
+        Expr0,
+        itree ( inode ( "|",_),[])
+    ]),
+    m0
+    )=
+    let
+        val t0 = typeOf(Expr0, m0)
+    in
+        if t0 = INT
+        then INT
+        else ERROR
+    end
+       
+| typeOf ( itree ( inode ( "Final",_),
+    [
+        Change0 as itree ( inode ( "Change",_), children)
+    ]),
+    m0 )= typeOf(Change0, m0)
+    
+| typeOf ( itree ( inode ( "Final",_),
+    [
+        Id0 as itree ( inode ( "Id",_), children)
+    ]),
+    m0 )= typeOf(Id0, m0)
+    
+| typeOf ( itree ( inode ( "Final",_),
+    [
+        Integer0 as itree ( inode ( "Integer",_), children)
+    ]),
+    m0 )= INT
+    
+| typeOf ( itree ( inode ( "Final",_),
+    [
+        Boolean0 as itree ( inode ( "true",_), children)
+    ]),
+    m0 )= BOOL
+    
+| typeOf ( itree ( inode ( "Final",_),
+    [
+        Boolean0 as itree ( inode ( "false",_), children)
+    ]),
+    m0 )= BOOL    
+    
+(*Pre/Post*)    
+| typeOf ( itree ( inode ( "Pre_Inc",_),
+    [
+        itree ( inode ("++",_),[]),
+        Id0
+    ]),
+    m0 
+    )=
+    let
+        val t0 = getType ( accessEnv ( getLeaf ( Id0 ), m0))
+    in
+        if t0 = INT
+        then INT
+        else ERROR
+    end    
+
+| typeOf ( itree ( inode ( "Post_Inc",_),
+    [
+        Id0,
+        itree ( inode ("++",_),[])
+    ]),
+    m0 
+    )=
+    let
+        val t0 = getType ( accessEnv ( getLeaf ( Id0 ), m0))
+    in
+        if t0 = INT
+        then INT
+        else ERROR
+    end  
+    
+| typeOf ( itree ( inode ( "Pre_Dec",_),
+    [
+        itree ( inode ("--",_),[]),
+        Id0
+    ]),
+    m0 
+    )=
+    let
+        val t0 = getType ( accessEnv ( getLeaf ( Id0 ), m0))
+    in
+        if t0 = INT
+        then INT
+        else ERROR
+    end  
+    
+| typeOf ( itree ( inode ( "Post_Dec",_),
+    [
+        Id0,
+        itree ( inode ("--",_),[])
+    ]),
+    m0 
+    )=
+    let
+        val t0 = getType ( accessEnv ( getLeaf ( Id0 ), m0))
+    in
+        if t0 = INT
+        then INT
+        else ERROR
+    end      
+    
+    
+    
+        
+        
+        
+        
+        
+        
+        
 (*Program or prog*)
 fun typeCheck( itree ( inode("prog",_),
     [
         Statement_List0
     ]),
     m0
-    ) = typeCheck(Stmt0, m0)
+    ) = typeCheck(Statement_List0, m0)
     
     (*Statement List*)
 |   typeCheck( itree ( inode("Statement_List",_),
     [
-        Stmt0,
+        Statement0,
         itree ( inode ( ";",_), []),
         Statement_List0
     ]),
@@ -109,14 +568,14 @@ fun typeCheck( itree ( inode("prog",_),
 | typeCheck ( itree ( inode ( "Init",_),
     [
         itree ( inode ( "INTEGER",_), []),
-        Id0
+        Id0,
         itree ( inode ( "=",_), []),
         Expr0
     ]),
     m0
     ) =    
     let 
-        val m1 = updateEnv ( getLeaf( Id0), INT, m0)
+        val m1 = updateEnv ( getLeaf( Id0), INT, 0, m0)
         val t0 = typeOf (Expr0, m0)
     in
         if t0 = INT
@@ -126,18 +585,27 @@ fun typeCheck( itree ( inode("prog",_),
     
 | typeCheck ( itree ( inode ( "Init",_),
     [
-        Id0
+        itree ( inode ( "BOOLEAN",_), []),
+        Id0,
         itree ( inode ( "=",_), []),
         Expr0
     ]),
     m0
-    ) =    
+    )=
+    let 
+        val m1 = updateEnv ( getLeaf( Id0), INT, 0, m0)
+        val t0 = typeOf (Expr0, m0)
+    in
+        if t0 = BOOL
+        then m1
+        else raise model_error
+    end  
     
     
 (*Assign*)    
 | typeCheck ( itree ( inode ( "Assign",_),
     [
-        Id0
+        Id0,
         itree ( inode ( "=",_), []),
         Expr0
     ]),
@@ -156,24 +624,39 @@ fun typeCheck( itree ( inode("prog",_),
 | typeCheck ( itree ( inode ("Decl",_),
     [
         itree ( inode ("INTEGER",_), []),
-        Id0;
+        Id0
     ]),
     m0 
-    ) = updateEnv( getLeaf (Id0), INT, m0) 
+    ) = updateEnv( getLeaf (Id0), INT, 0, m0) 
         
 | typeCheck ( itree ( inode ("Decl",_),
     [
         itree ( inode ("BOOLEAN",_), []),
-        Id0;
+        Id0
     ]),
     m0 
-    ) = updateEnv( getLeaf (Id0), BOOL, m0)         
+    ) = updateEnv( getLeaf (Id0), BOOL, 0, m0)         
     
     
     (*Id = Identifier*)
     
     
-    
+| typeCheck ( itree ( inode ( "Id",_),
+    [
+        Id0,
+        itree ( inode ( "=",_),[]),
+        Identifier0
+    ]),
+    m0 
+    )= 
+    let 
+        val t0 = getType( accessEnv( getLeaf ( Id0), m0))
+        val t1 = typeOf (Identifier0, m0)
+    in    
+        if t0 = t1
+        then m0
+        else raise model_error
+    end 
     
     
     
@@ -196,7 +679,7 @@ fun typeCheck( itree ( inode("prog",_),
     end    
     
 (*For_Loop*)
-| typeCheck ( itree ( inode ("For_Loop"),_),
+| typeCheck ( itree ( inode ("For_Loop",_),
     [
         itree ( inode ( "for",_),[]),
         itree ( inode ( "(",_),[]),
@@ -221,7 +704,7 @@ fun typeCheck( itree ( inode("prog",_),
         else raise model_error
     end
     
-| typeCheck ( itree ( inode ("For_Loop"),_),
+| typeCheck ( itree ( inode ("For_Loop",_),
     [
         itree ( inode ( "for",_),[]),
         itree ( inode ( "(",_),[]),
@@ -247,7 +730,7 @@ fun typeCheck( itree ( inode("prog",_),
     end    
     
 (*While_Loop*)
-| typeCheck ( itree ( inode ("While_Loop"),_),
+| typeCheck ( itree ( inode ("While_Loop",_),
     [
         itree ( inode ( "While",_),[]),
         itree ( inode ( "(",_),[]),
@@ -267,10 +750,10 @@ fun typeCheck( itree ( inode("prog",_),
     end
     
 (*Branch*)
-| typeCheck ( itree ( inode ("Branch"),_),
+| typeCheck ( itree ( inode ("Branch",_),
     [
         itree ( inode ( "if",_),[]),
-        Expr0
+        Expr0,
         itree ( inode ( "then",_),[]),
         Block0
     ]),
@@ -285,12 +768,12 @@ fun typeCheck( itree ( inode("prog",_),
         else raise model_error
     end    
         
-| typeCheck ( itree ( inode ("Branch"),_),
+| typeCheck ( itree ( inode ("Branch",_),
     [
         itree ( inode ( "if",_),[]),
-        Expr0
+        Expr0,
         itree ( inode ( "then",_),[]),
-        Block0
+        Block0,
         itree ( inode ( "else",_),[]),
         Block1
     ]),
@@ -306,13 +789,52 @@ fun typeCheck( itree ( inode("prog",_),
         else raise model_error
     end    
     
-(*Change*)
-
-(*Pre/Post stuff*)
-
-
+(*Print_Expr*)
+| typeCheck ( itree ( inode ( "Print_Expr",_),
+    [
+        itree ( inode ( "print",_),[]),
+        Expr0
+    ]),
+    m0
+    )= 
+    let
+        val t0 = typeOf(Expr0, m0)
+    in
+        if t0 = ERROR
+        then raise model_error
+        else m0
+    end
     
-            
+    
+(*Change*)
+| typeCheck ( itree ( inode ( "Change" ,_),
+    [
+            Pre_Inc0 as itree ( inode ( "Pre_Inc",_), children)
+    ]),
+    m0
+    )= typeCheck( Pre_Inc0, m0)
+        
+| typeCheck ( itree ( inode ( "Change" ,_),
+    [
+            Post_Inc0 as itree ( inode ( "Post_Inc",_), children)
+    ]),
+    m0
+    )= typeCheck( Post_Inc0, m0)
+    
+| typeCheck ( itree ( inode ( "Change" ,_),
+    [
+            Pre_Dec0 as itree ( inode ( "Pre_Dec",_), children)
+    ]),
+    m0
+    )= typeCheck( Pre_Dec0, m0)
+
+| typeCheck ( itree ( inode ( "Change" ,_),
+    [
+            Post_Dec0 as itree ( inode ( "Post_Dec",_), children)
+    ]),
+    m0
+    )= typeCheck( Post_Dec0, m0)
+                    
 (*fun typeCheck( itree(inode("prog",_), [ stmt_list ] ), m) = m*)
 
 
