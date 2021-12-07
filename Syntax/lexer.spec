@@ -39,7 +39,7 @@ ws           = [\  \t \n];
 posDigit     = [1-9];
 integer      = 0 | {posDigit}{digit}*;
 identifier   = {alpha}{alphanumeric}*;
-
+boolean      = true | false;
 
 schema_id    = "<" {alpha}{alphanumeric}* ">_" {alphanumeric}+;
 comment      = "//" .* ;
@@ -90,7 +90,7 @@ comment      = "//" .* ;
 
 {integer}    => ( SHELL("integer"   , yytext,     getNextTokenPos(yytext))    );
 {identifier} => ( SHELL("identifier"        , yytext,     getNextTokenPos(yytext))    );
-
+{boolean}    => ( SHELL("boolean"        , yytext,     getNextTokenPos(yytext))    );
 
 {schema_id}                   => ( SHELL(generateSchemaTokenName(yytext), yytext, getNextTokenPos(yytext))    );
 "[:]"                         => ( SHELL("" , yytext, getNextTokenPos(yytext))    );

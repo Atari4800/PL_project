@@ -11,8 +11,8 @@ prog
     | <assign>
     | <decl>
     | <block>
-    | <for_Loop>
-    | <while_Loop>
+    | <for_loop>
+    | <while_loop>
     | <branch>
     | <change>
     | <print_result>.
