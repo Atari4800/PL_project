@@ -129,11 +129,12 @@ fun showStore [] = print "\n"
                                 );
 
 fun printModel (env,addr,s) = (
-                              print("\n =====Enviroment====== \n");
+                              print("\n=====Enviroment======");
                               showEnv env;
-                              print("\n =====Store===== \n");
+                              print("\n=====Store=====");
                               showStore s;
-                              print("\n last mem loc: " ^ Int.toString addr)
+                              print("\nLast memory loc used: " ^ Int.toString addr);
+                              print("\n")
                               );
 
 (* =========================================================================================================== *)

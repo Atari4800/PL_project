@@ -873,6 +873,7 @@ fun M(itree(inode("prog",_),
                     else
                         m1
                 end
+
   | M(itree(inode("branch",_),
                     [
                         itree(inode("if",_),[]),
@@ -901,7 +902,7 @@ fun M(itree(inode("prog",_),
                             m2
                         end
                 end
-                
+
 
   | M(itree(inode("while_loop",_),
                     [
@@ -933,8 +934,6 @@ fun M(itree(inode("prog",_),
                     W(expr, block, m)
                 end
 
-
-(*
   | M(itree(inode("for_loop",_),
                     [
                         itree(inode("for",_),[]),
@@ -969,11 +968,10 @@ fun M(itree(inode("prog",_),
                     
                     val (env1,addr,s1) = M(init,m)
                     val (env2,addr,s2) = F(expr,change,block,(env1,addr,s1))
-                    val m5 = (env2,addr,s1)
+                    val m5 = (env2,addr,s2) (* maybe should be (env2,addr,s1) *)
                 in
                     m5
                 end
-*)
 
   | M(  itree(inode(x_root,_), children),_) = raise General.Fail("\n\n In M root = " ^ x_root ^ "\n\n")
   
