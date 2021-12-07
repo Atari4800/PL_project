@@ -57,7 +57,7 @@ fun accessEnv( id1, (env,addr,s) ) =
         aux env
     end;
     
-fun accessStore( loc1:int, (env,addr,s) ) =
+fun accessStore( loc1, (env,addr,s) ) =
     let
       val msg = "Error: accessStore " ^ Int.toString loc1 ^ " not found.";
 
@@ -70,38 +70,38 @@ fun accessStore( loc1:int, (env,addr,s) ) =
     end;
     
     
-
-
 fun updateEnv(id1, t1:types, loc1, (env,addr,s)) =
 let
-  fun update_aux1( (tuple1 as (x1, y1:types, z1:int))::env, tuple2 as (x2, y2:types, z2)) =
+  fun update_env_aux( (tuple1 as (x1, y1:types, z1:int))::env, tuple2 as (x2, y2:types, z2)) =
     if x1 = x2 then tuple2::env
-    else            tuple1::update_aux1(env, tuple2)
-    | update_aux1([], tuple) = [tuple];
+    else            tuple1::update_env_aux(env, tuple2)
+    | update_env_aux([], tuple) = [tuple];
   
-  val new_env = update_aux1(env,(id1,t1,loc1))
+  val new_env = update_env_aux(env,(id1,t1,loc1))
 in
   (new_env, addr, s)
 end;
 
 
-
-
-fun updateStore(loc1, dv1, (env,addr,s)) =
+fun updateStore(loc1, dv1:denotable_value, (env,addr,s)) =
 let
-  fun update_aux( (tuple1 as (x1,y1))::flr, tuple2 as (x2,y2)) =
+  fun update_store_aux( (tuple1 as (x1,y1))::flr, tuple2 as (x2,y2)) =
     if x1 = x2 then tuple2::flr
-    else            tuple1::update_aux(flr,tuple2)
-  | update_aux( [], tuple) = [tuple];
+    else            tuple1::update_store_aux(flr,tuple2)
+  | update_store_aux( [], tuple) = [tuple];
   
-  val new_store = update_aux(s,(loc1,dv1))
+  val new_store = update_store_aux(s,(loc1,dv1))
 in
   (env,addr,new_store)
 end;
 
 
-fun getLoc(t:types,loc) = loc;
-fun getType(t:types,loc) = t;
+fun getLoc(t:types, loc) = loc;
+
+
+fun getType(t:types, loc) = t;
+
+
 
 fun typeToString BOOL  = "bool"
   | typeToString INT   = "integer"
@@ -129,12 +129,11 @@ fun showStore [] = print "\n"
                                 );
 
 fun printModel (env,addr,s) = (
-                              print("\n Enviroment: \n");
+                              print("\n =====Enviroment====== \n");
                               showEnv env;
-                              print("\n Store: \n");
+                              print("\n =====Store===== \n");
                               showStore s;
-                              print("\n next mem loc: \n" ^ Int.toString addr ^
-                              "\n")
+                              print("\n last mem loc: " ^ Int.toString addr)
                               );
 
 (* =========================================================================================================== *)
