@@ -75,6 +75,7 @@ comment      = "//" .* ;
 "|" => (SHELL(yytext, yytext, getNextTokenPos(yytext)));
 "for" => (SHELL(yytext, yytext, getNextTokenPos(yytext)));
 "while" => (SHELL(yytext, yytext, getNextTokenPos(yytext)));
+"do" => (SHELL(yytext, yytext, getNextTokenPos(yytext)));
 "if" => (SHELL(yytext, yytext, getNextTokenPos(yytext)));
 "else" => (SHELL(yytext, yytext, getNextTokenPos(yytext)));
 "then" => (SHELL(yytext, yytext, getNextTokenPos(yytext)));
